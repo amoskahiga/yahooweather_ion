@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Yahoo Weather Service
+Comment=XML Data from Yahoo Weather
+Type=Service
+
+X-KDE-ServiceTypes=Plasma/DataEngine
+X-KDE-ParentApp=weatherengine
+X-KDE-Library=plasma_engine_yahooion
+X-KDE-PluginInfo-Name=yahooion
