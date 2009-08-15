@@ -1,5 +1,5 @@
 Description:
-A KDE Plasma weather DataEngine tthat provides data from the Yahoo! Weather service <http://developer.yahoo.com/weather/>.
+A KDE Plasma weather DataEngine that provides data from the Yahoo! Weather service <http://developer.yahoo.com/weather/>.
 
 NOTE: Yahoo currently does not easily support querying for the location information, so you will need to know this beforehand.  For US users, you can simply use your ZIP code for the location.  For all other cases, you can obtain a valid location ID by:
 1. Go to http://weather.yahoo.com/
@@ -12,10 +12,10 @@ KDE4 >= 4.x
 
 Source
 Current source available at git repository:
-<http://github.com/amoskahiga/YahooIon>
+<http://github.com/amoskahiga/yahooweather_ion>
 
 Features:
-- Queries the Yahoo! Weather service and makes the data available via the yahooion weather dataengine .
+- Queries the Yahoo! Weather service and makes the data available via the yahooweather_ion weather dataengine .
 
 Installation:
 Extract contents and run installation scripts:
@@ -30,5 +30,4 @@ Alternatively you can run following commands:
 >make install
 >kbuildsycoca4
 
-After this, YahooIon will be available as a weather dataengine.  You can set one of the available weather applets to use this data engine.
-
+After this, yahooweather_ion will be available as a weather dataengine.  You can set one of the available weather applets to use this data engine.
