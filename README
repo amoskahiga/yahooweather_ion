@@ -1,11 +1,11 @@
 Description:
 A KDE Plasma weather DataEngine that provides data from the Yahoo! Weather service <http://developer.yahoo.com/weather/>.
 
-NOTE: Yahoo currently does not easily support querying for the location information, so you will need to know this beforehand.  For US users, you can simply use your ZIP code for the location.  For all other cases, you can obtain a valid location ID by:
+NOTE: Yahoo currently does not easily support querying for the location information, so you will need to know this beforehand.  For USA users, you can simply use your ZIP code for the location.  For all other cases, you can obtain a valid location ID by:
 1. Go to http://weather.yahoo.com/
 2. Type in your city, country and click Go
 3. Copy the 8 character location ID from the URL on the next page (i.e. for Hong Kong, China it is CHXX0049)
-4. Use the location ID as the location for the dataengine
+4. Use the location ID as the location for the dataengine in the weather applets
 
 Requirements:
 KDE4 >= 4.x

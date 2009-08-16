@@ -27,6 +27,96 @@ YahooWeatherIon::YahooWeatherIon(QObject *parent, const QVariantList &args)
 
 {
     Q_UNUSED(args);
+
+    /**
+     * Set up the name mapping between the weather condition codes as obtained by the Yahoo weather
+     * service, and the icon names used by the WeatherEngine for the day and night time.
+     *
+     * @see Weather condition codes are described at <http://developer.yahoo.com/weather/#codes>
+     */
+
+    /*
+      IonInterface::ConditionIcons
+
+      ClearDay, FewCloudsDay, PartlyCloudyDay, Overcast,
+      Rain, LightRain, Showers, ChanceShowersDay, Thunderstorm, Hail,
+      Snow, LightSnow, Flurries, FewCloudsNight, ChanceShowersNight,
+      PartlyCloudyNight, ClearNight, Mist, Haze, FreezingRain,
+      RainSnow, FreezingDrizzle, ChanceThunderstormDay, ChanceThunderstormNight,
+      ChanceSnowDay, ChanceSnowNight, NotAvailable
+    */
+    QMap<QString, ConditionIcons> commonConditionList;
+
+    commonConditionList["0"] = Thunderstorm;    // tornado
+    commonConditionList["1"] = Thunderstorm;    // tropical storm
+    commonConditionList["2"] = Thunderstorm;    // hurricane
+    commonConditionList["3"] = Thunderstorm;    // severe thunderstorms
+    commonConditionList["4"] = Thunderstorm;    // thunderstorms
+    commonConditionList["5"] = RainSnow;        // mixed rain and snow
+    commonConditionList["6"] = FreezingRain;    // mixed rain and sleet
+    commonConditionList["7"] = RainSnow;        // mixed snow and sleet
+    commonConditionList["8"] = FreezingDrizzle; // freezing drizzle
+    commonConditionList["9"] = LightRain;       // drizzle
+    commonConditionList["10"] = FreezingRain;   // freezing rain
+    commonConditionList["11"] = Showers;        // showers
+    commonConditionList["12"] = Showers;        // showers
+    commonConditionList["13"] = Flurries;       // snow flurries
+    commonConditionList["14"] = LightSnow;      // light snow showers
+    commonConditionList["15"] = Snow;           // blowing snow
+    commonConditionList["16"] = Snow;           // snow
+    commonConditionList["17"] = Hail;           // hail
+    commonConditionList["18"] = Hail;           // sleet
+    commonConditionList["19"] = Haze;           // dust
+    commonConditionList["20"] = Mist;           // foggy
+    commonConditionList["21"] = Haze;           // haze
+    commonConditionList["22"] = Haze;           // smoky
+    commonConditionList["23"] = Overcast;       // blustery
+    commonConditionList["27"] = Overcast;       // mostly cloudy (night)
+    commonConditionList["28"] = Overcast;       // mostly cloudy (day)
+    commonConditionList["35"] = FreezingRain;   // mixed rain and hail
+    commonConditionList["41"] = Snow;           // heavy snow
+    commonConditionList["43"] = Snow;           // heavy snow
+    commonConditionList["45"] = Showers;            // thundershowers
+    commonConditionList["46"] = RainSnow;           // snow showers
+    commonConditionList["3200"] = NotAvailable;     // not available
+
+    dayConditionList = commonConditionList;
+    dayConditionList["24"] = ClearDay;       // windy
+    dayConditionList["25"] = ClearDay;       // cold
+    dayConditionList["26"] = FewCloudsDay;   // cloudy
+    dayConditionList["29"] = PartlyCloudyDay;    // partly cloudy (night)
+    dayConditionList["30"] = PartlyCloudyDay;    // partly cloudy (day)
+    dayConditionList["31"] = ClearDay;       // clear (night)
+    dayConditionList["32"] = ClearDay;       // sunny
+    dayConditionList["33"] = FewCloudsDay;    // fair (night)
+    dayConditionList["34"] = FewCloudsDay;    // fair (day)
+    dayConditionList["36"] = ClearDay;       // hot
+    dayConditionList["37"] = ChanceShowersDay;// isolated thunderstorms
+    dayConditionList["38"] = ChanceShowersDay;// (ChanceThunderstormDay misisng) scattered thunderstorms
+    dayConditionList["39"] = ChanceShowersDay;// (ChanceThunderstormDay misisng) scattered thunderstorms
+    dayConditionList["40"] = ChanceShowersDay;       // scattered showers
+    dayConditionList["42"] = ChanceSnowDay;  // scattered snow showers
+    dayConditionList["44"] = PartlyCloudyDay;    // partly cloudy
+    dayConditionList["47"] = ChanceShowersDay;   // isolated thundershowers
+
+    nightConditionList = commonConditionList;
+    nightConditionList["24"] = ClearNight;       // windy
+    nightConditionList["25"] = ClearNight;       // cold
+    nightConditionList["26"] = FewCloudsNight;   // cloudy
+    nightConditionList["29"] = PartlyCloudyNight;    // partly cloudy (night)
+    nightConditionList["30"] = PartlyCloudyNight;    // partly cloudy (day)
+    nightConditionList["31"] = ClearNight;       // clear (night)
+    nightConditionList["32"] = ClearNight;       // sunny
+    nightConditionList["33"] = FewCloudsNight;    // fair (night)
+    nightConditionList["34"] = FewCloudsNight;    // fair (day)
+    nightConditionList["36"] = ClearNight;       // hot
+    nightConditionList["37"] = ChanceShowersNight; // isolated thunderstorms
+    nightConditionList["38"] = ChanceShowersNight; // (ChanceThunderstormDay misisng) scattered thunderstorms
+    nightConditionList["39"] = ChanceShowersNight; // (ChanceThunderstormDay misisng) scattered thunderstorms
+    nightConditionList["40"] = ChanceShowersNight;       // scattered showers
+    nightConditionList["42"] = ChanceSnowNight;  // scattered snow showers
+    nightConditionList["44"] = PartlyCloudyNight;    // partly cloudy
+    nightConditionList["47"] = ChanceShowersNight;   // isolated thundershowers
 }
 
 /**
@@ -38,6 +128,7 @@ YahooWeatherIon::~YahooWeatherIon()
 
 /**
  * Initializes the ion
+ *
  * @todo figure out if it's possible to prefetch a list of possible location ID's from Yahoo
  */
 void YahooWeatherIon::init()
@@ -51,141 +142,6 @@ void YahooWeatherIon::init()
 void YahooWeatherIon::reset()
 {
     emit(resetCompleted(this, true));
-}
-
-/**
- * Sets up the name mapping between the weather condition summary as obtained by the Yahoo weather
- * service, and the icon names used by the WeatherEngine for the day-time.
- */
-QMap<QString, IonInterface::ConditionIcons> YahooWeatherIon::getDayIconMappings(void) const
-{
-    /*ClearDay, FewCloudsDay, PartlyCloudyDay, Overcast,
-      Rain, LightRain, Showers, ChanceShowersDay, Thunderstorm, Hail,
-      Snow, LightSnow, Flurries, FewCloudsNight, ChanceShowersNight,
-      PartlyCloudyNight, ClearNight, Mist, Haze, FreezingRain,
-      RainSnow, FreezingDrizzle, ChanceThunderstormDay, ChanceThunderstormNight,
-      ChanceSnowDay, ChanceSnowNight, NotAvailable
-    */
-    QMap<QString, ConditionIcons> dayList;
-
-    dayList["tornado"] = Thunderstorm;
-    dayList["tropical storm"] = Thunderstorm;
-    dayList["hurricane"] = Thunderstorm;
-    dayList["severe thunderstorms"] = Thunderstorm;
-    dayList["thunderstorms"] = Thunderstorm;
-
-    dayList["mixed rain and snow"] = RainSnow;
-    dayList["mixed rain and sleet"] = RainSnow;
-    dayList["mixed snow and sleet"] = RainSnow;
-
-    dayList["freezing drizzle"] = FreezingDrizzle;
-    dayList["drizzle"] = Mist;
-    dayList["freezing rain"] = FreezingRain;
-    dayList["snow flurries"] = Flurries;
-    dayList["light snow showers"] = LightSnow;
-    dayList["blowing snow"] = Snow;
-    dayList["snow"] = Snow;
-    dayList["hail"] = Hail;
-    dayList["sleet"] = Hail;
-    dayList["dust"] = NotAvailable;
-    dayList["foggy"] = Mist;
-    dayList["haze"] = Mist;
-    dayList["smoky"] = Mist;
-    dayList["blustery"] = NotAvailable;
-    dayList["windy"] = NotAvailable;
-
-    dayList["cold"] = NotAvailable;
-    dayList["cloudy"] = Overcast;
-    dayList["mostly sunny"] = FewCloudsDay;
-    dayList["mostly cloudy (day)"] = Overcast;
-    dayList["mostly cloudy"] = Overcast;
-    dayList["partly cloudy (day)"] = PartlyCloudyDay;
-    dayList["partly cloudy"] = PartlyCloudyDay;
-    dayList["fair (day)"] = FewCloudsDay;
-    dayList["fair"] = FewCloudsDay;
-    dayList["mixed rain and hail"] = FreezingRain;
-
-    dayList["hot"] = NotAvailable;
-    dayList["isolated thunderstorms"] = ChanceThunderstormDay;
-    dayList["scattered thunderstorms"] = ChanceThunderstormDay;
-    dayList["scattered showers"] = ChanceShowersDay;
-    dayList["heavy snow"] = NotAvailable;
-    dayList["scattered snow showers"] = LightSnow;
-    dayList["heavy snow"] = Snow;
-    dayList["thundershowers"] = Thunderstorm;
-    dayList["snow showers"] = Snow;
-    dayList["isolated thundershowers"] = Thunderstorm;
-    dayList["not available"] = NotAvailable;
-
-    return dayList;
-}
-
-/**
- * Sets up the name mapping between the weather condition summary as obtained by the Yahoo weather
- * service, and the icon names used by the WeatherEngine for the night-time.
- */
-QMap<QString, IonInterface::ConditionIcons> YahooWeatherIon::getNightIconMappings(void) const
-{
-    /*ClearDay, FewCloudsDay, PartlyCloudyDay, Overcast,
-      Rain, LightRain, Showers, ChanceShowersDay, Thunderstorm, Hail,
-      Snow, LightSnow, Flurries, FewCloudsNight, ChanceShowersNight,
-      PartlyCloudyNight, ClearNight, Mist, Haze, FreezingRain,
-      RainSnow, FreezingDrizzle, ChanceThunderstormDay, ChanceThunderstormNight,
-      ChanceSnowDay, ChanceSnowNight, NotAvailable
-    */
-    QMap<QString, ConditionIcons> nightList;
-
-    nightList["tornado"] = Thunderstorm;
-    nightList["tropical storm"] = Thunderstorm;
-    nightList["hurricane"] = Thunderstorm;
-    nightList["severe thunderstorms"] = Thunderstorm;
-    nightList["thunderstorms"] = Thunderstorm;
-
-    nightList["mixed rain and snow"] = RainSnow;
-    nightList["mixed rain and sleet"] = RainSnow;
-    nightList["mixed snow and sleet"] = RainSnow;
-
-    nightList["freezing drizzle"] = FreezingDrizzle;
-    nightList["drizzle"] = Mist;
-    nightList["freezing rain"] = FreezingRain;
-    nightList["snow flurries"] = Flurries;
-    nightList["light snow showers"] = LightSnow;
-    nightList["blowing snow"] = Snow;
-    nightList["snow"] = Snow;
-    nightList["hail"] = Hail;
-    nightList["sleet"] = Hail;
-    nightList["dust"] = NotAvailable;
-    nightList["foggy"] = Mist;
-    nightList["haze"] = Mist;
-    nightList["smoky"] = Mist;
-    nightList["blustery"] = NotAvailable;
-    nightList["windy"] = NotAvailable;
-
-    nightList["cold"] = NotAvailable;
-    nightList["cloudy"] = Overcast;
-    nightList["mostly cloudy (night)"] = Overcast;
-    nightList["mostly cloudy"] = Overcast;
-    nightList["partly cloudy (night)"] = PartlyCloudyNight;
-    nightList["partly cloudy"] = PartlyCloudyNight;
-    nightList["clear (night)"] = ClearNight;
-    nightList["clear"] = ClearNight;
-    nightList["fair (night)"] = FewCloudsNight;
-    nightList["fair"] = FewCloudsNight;
-    nightList["mixed rain and hail"] = FreezingRain;
-
-    nightList["hot"] = NotAvailable;
-    nightList["isolated thunderstorms"] = ChanceThunderstormNight;
-    nightList["scattered thunderstorms"] = ChanceThunderstormNight;
-    nightList["scattered showers"] = ChanceShowersNight;
-    nightList["heavy snow"] = NotAvailable;
-    nightList["scattered snow showers"] = LightSnow;
-    nightList["heavy snow"] = Snow;
-    nightList["thundershowers"] = Thunderstorm;
-    nightList["snow showers"] = Snow;
-    nightList["isolated thundershowers"] = Thunderstorm;
-    nightList["not available"] = NotAvailable;
-
-    return nightList;
 }
 
 /**
@@ -286,9 +242,13 @@ void YahooWeatherIon::slotJobFinished(KJob *job)
     WeatherData weatherData;
 
     QXmlStreamReader *reader = m_jobXml[job];
-    if (reader) {
-        parseXMLData(*reader, weatherData);
+    if (reader && parseXMLData(*reader, weatherData)) {
         updateWeather(m_jobList[job], weatherData);
+    }
+    else
+    {
+        // Clear the current data. so that the user knows an error occured.
+        setData(m_jobList[job], Data());
     }
 
     delete reader;
@@ -355,13 +315,19 @@ bool YahooWeatherIon::parseXMLData(QXmlStreamReader& xml, WeatherData& weatherDa
         }
     }
 
-    return !xml.error();
+    /* If the XML was malformed or the returned data was invalid (e.g. the locationID was invalid)
+     * return false.  We are assuming all feeds will at least have a valid ttl field (arbitrary)
+     */
+    if(xml.error() != QXmlStreamReader::NoError || weatherData.ttl.isEmpty())
+        return false;
+    else
+        return true;    // Succesfully parsed data
 }
 
 /**
- * Updates the weather engine source with the parsed weather data.
+ * Updates the weather engine source with the parsed weather data
  *
- * @param source the name of the source that should be updated.
+ * @param source the name of the source that should be updated
  * @param weatherData weather data used to update the source
  */
 void YahooWeatherIon::updateWeather(const QString& source, const WeatherData& weatherData)
@@ -383,11 +349,9 @@ void YahooWeatherIon::updateWeather(const QString& source, const WeatherData& we
 
     // Provide mapping for the condition-type to the icons to display
     if (currentTime > sunriseTime && currentTime < sunsetTime) {
-        data.insert("Condition Icon", getWeatherIcon(getDayIconMappings(),
-                                                     weatherData.condition.text.toLower()));
+        data.insert("Condition Icon", getWeatherIcon(dayConditionList, weatherData.condition.code));
     } else {
-        data.insert("Condition Icon", getWeatherIcon(getNightIconMappings(),
-                                                     weatherData.condition.text.toLower()));
+        data.insert("Condition Icon", getWeatherIcon(nightConditionList, weatherData.condition.code));
     }
 
     data.insert("Humidity", weatherData.atmosphere.humidity);
@@ -401,6 +365,10 @@ void YahooWeatherIon::updateWeather(const QString& source, const WeatherData& we
 
     data.insert("Pressure", weatherData.atmosphere.pressure);
     data.insert("Pressure Unit", QString::number(WeatherUtils::InchesHG));
+    QString pressureTendencies[] = {i18nc("pressure tendency", "steady"),
+                                    i18nc("pressure tendency", "rising"),
+                                    i18nc("pressure tendency", "falling")};
+    data.insert("Pressure Tendency",pressureTendencies[weatherData.atmosphere.rising.toInt()]);
 
     data.insert("Windchill", weatherData.wind.chill);
     data.insert("Wind Speed", weatherData.wind.speed);
@@ -413,10 +381,15 @@ void YahooWeatherIon::updateWeather(const QString& source, const WeatherData& we
     int dayIndex = 0;
     foreach(WeatherData::Forecast forecast, weatherData.forecasts) {
 
-        QString iconName = getWeatherIcon(getDayIconMappings(), forecast.text.toLower());
+        QString iconName = getWeatherIcon(dayConditionList, forecast.code);
+
+        // Get the short day name for the forecast
+        QDate forecastDate = QDate::fromString(forecast.date, "d MMM yyyy");
+        int weekday = forecastDate.dayOfWeek();
+        QString shortDayName = QDate::shortDayName(weekday);
 
         data.insert(QString("Short Forecast Day %1").arg(dayIndex), QString("%1|%2|%3|%4|%5|%6") \
-                .arg(forecast.date).arg(iconName).arg(forecast.text).arg(forecast.high) \
+                .arg(shortDayName).arg(iconName).arg(forecast.text).arg(forecast.high) \
                 .arg(forecast.low).arg("N/U"));
         dayIndex++;
     }
@@ -435,8 +408,8 @@ void YahooWeatherIon::updateWeather(const QString& source, const WeatherData& we
  */
 QString YahooWeatherIon::getWindDirection(int angle)
 {
-    QString directions[] = {"N", "NNE", "NE", "ENE", "E", "SSE", "SE", "ESE", "S", "NNW",
-                                   "NW", "WNW", "W", "SSW", "SW", "WSW"};
+    QString directions[] = {"N", "NNE", "NE", "ENE", "E", "SSE", "SE", "ESE", "S", "NNW", "NW",
+                            "WNW", "W", "SSW", "SW", "WSW"};
 
     // Offest the ange by 11.25 degrees
     if(angle > (360 - 11.25))
@@ -450,9 +423,9 @@ QString YahooWeatherIon::getWindDirection(int angle)
 }
 
 /**
- * Parses a time string and returns the representative time.
+ * Parses a time string and returns the representative time
  *
- * Note: Meridem means "am" or "pm".
+ * Note: Meridem means "am" or "pm"
  *
  * @param time desired in the format [hh:mm meridiem]
  */

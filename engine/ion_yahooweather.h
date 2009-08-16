@@ -119,10 +119,10 @@ private:
 
     QMap<KJob *, QXmlStreamReader*> m_jobXml;
     QMap<KJob *, QString> m_jobList;
+    QMap<QString, ConditionIcons> dayConditionList;
+    QMap<QString, ConditionIcons> nightConditionList;
 
     // Methods
-    QMap<QString, ConditionIcons> getDayIconMappings(void) const;
-    QMap<QString, ConditionIcons> getNightIconMappings(void) const;
     QString getWindDirection(int angle);
     QTime getTime(QString time);
 

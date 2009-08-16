@@ -1,1 +1,9 @@
--  Find a way to perform location lookup and validation.  Currently not supported by yahoo but may be added later as discussed on: <http://developer.yahoo.net/forum/index.php?showtopic=1305>
+-  Find a way to perform location lookup and validation.  Currently not supported by Yahoo; however, an API to query for this data might be added later as discussed on: <http://developer.yahoo.net/forum/index.php?showtopic=1305>.  For USA users, you can simply use your ZIP code for the location.  For all other cases, you can obtain a valid location ID by:
+    Going to http://weather.yahoo.com/
+    Type in your city, country and click Go
+    Copy the 8 character location ID from the URL on the next page (i.e. for Hong Kong, China it is CHXX0049)
+    Use the location ID as the location for the dataengine in the weather applets
+
+- Change to use WeatherUtils::Percent for "Humidity Field"
+
+- Change to use IonInterface::ChanceThunderstormDay for "scattered thunderstorms".  Cannot currently find any icon  files for the associated weather-scattered-storms-day and weather-scattered-storms-night (at least for the oxygen theme: <http://websvn.kde.org/trunk/kdesupport/oxygen-icons/scalable/status/>).
